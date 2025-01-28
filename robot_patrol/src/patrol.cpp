@@ -30,13 +30,13 @@ private:
 
    float safest_angle = find_safest_angle();
 
-   if (std::isfinite(safest_angle)) 
+   if (std::isfinite(safest_angle) && safest_angle < 3.5) 
    { 
-    cmd.angular.z = -safest_angle * ANGULAR_SPEED_GAIN; 
+    cmd.angular.z = std::clamp(-safest_angle * ANGULAR_SPEED_GAIN, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
    } 
    else 
    {
-    cmd.angular.z = 0.0; 
+    cmd.angular.z = 0.0;
    }
    cmd_pub_->publish(cmd);
  }
@@ -59,7 +59,8 @@ private:
   }
 
   const float FORWARD_SPEED = 0.1;
-  const float ANGULAR_SPEED_GAIN = 0.25;
+  const float MAX_ANGULAR_SPEED = 1.0;
+  const float ANGULAR_SPEED_GAIN = 0.5;
   const int SCAN_ANGLE_RANGE = 180; 
   rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr scan_sub_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_pub_;
