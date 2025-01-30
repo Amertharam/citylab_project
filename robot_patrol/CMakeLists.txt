@@ -12,6 +12,9 @@ find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED) 
 find_package(geometry_msgs)
 
+find_package(robot_patrol_interfaces REQUIRED)
+
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
@@ -27,8 +30,12 @@ endif()
 add_executable(patrol_node src/patrol.cpp) 
 ament_target_dependencies(patrol_node rclcpp sensor_msgs geometry_msgs) 
 
+add_executable(direction_service src/direction_service.cpp)
+ament_target_dependencies(direction_service rclcpp sensor_msgs robot_patrol_interfaces)
+
 install(TARGETS 
 patrol_node 
+direction_service
 DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY 
